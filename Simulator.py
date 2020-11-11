@@ -11,7 +11,7 @@ if not complieFile:
 
 for f in complieFile:
     # initialize register
-    reg = [i for i in range(Config.maxRegs)]
+    reg = [0 for i in range(Config.maxRegs)]
     stack = []
     memory = []
     with open(abspath(f), 'r') as file:
@@ -25,7 +25,8 @@ for f in complieFile:
     sf.printMemory(memory)
     # Simulator
     while True:
-        if pc == sizeOfProgram:
+        sf.printState(pc, memory, reg)
+        if (pc == sizeOfProgram) or (memory[pc][0][0] == '.fill'):
             print('end of program')
             break
         pc += 1
