@@ -4,20 +4,21 @@ from Config import Config
 #                                                  CONVERT                                             #
 #------------------------------------------------------------------------------------------------------#
 
-def cvtTwoCsomplement(value: str) -> int:
+def cvtTwosComplement(value: str) -> int:
     if value[0] == "1":
         val = -((int(value, base=2) ^ (Config.xor32Bit if len(value) == 32 else Config.xor16Bit)) + 1)
     else: 
         val = int(value[1:], base=2)
     return val
 
-def isFillFormat(splitAddress: list) -> bool:
-    if splitAddress[0] != Config.MSB7:
+def isFillFormat(splitAddress: list, address: str) -> bool:
+    twosCompVal = cvtTwosComplement(address)
+    if (splitAddress[0] != Config.MSB7) or (Config.maxNegativeValue <= twosCompVal <= Config.maxPositiveValue):
         return True
 
 def fillFormat(address: str, addr: list) -> None:
     addr.append('.fill')
-    addr.append(cvtTwoCsomplement(address))
+    addr.append(cvtTwosComplement(address))
 
 def rTypeFormatter(splitAddress: list, addr: list) -> None:
     # opcode
@@ -37,7 +38,7 @@ def iTypeFormatter(splitAddress: list, addr: list) -> None:
     # reg B
     addr.append(int(splitAddress[2][3:6], base=2))
     # offsetField
-    addr.append(cvtTwoCsomplement(splitAddress[2][6:]))
+    addr.append(cvtTwosComplement(splitAddress[2][6:]))
 
 def jTypeFormatter(splitAddress: list, addr: list) -> None:
     # opcode
@@ -53,13 +54,8 @@ def oTypeFormatter(splitAddress: list, addr: list) -> None:
 
 def splitOpcode(address: str) -> list:
     addr = []
-    splitAddr = []
-    # MSB 7 bit
-    splitAddr.append(address[:7])
-    # opcode
-    splitAddr.append(address[7:10]) 
-    splitAddr.append(address[10:])
-    if isFillFormat(splitAddr):
+    splitAddr = [address[:7], address[7:10], address[10:]]
+    if isFillFormat(splitAddr, address):
         fillFormat(address, addr)
     elif (Config.opcodeOTypeBin.get(splitAddr[1], None)):
         # O Type
@@ -76,11 +72,69 @@ def splitOpcode(address: str) -> list:
     else:
         fillFormat(address, addr)
     # print(address, addr)
-    return addr
+    return addr, cvtTwosComplement(address)
 
 #------------------------------------------------------------------------------------------------------#
 #                                                  SIMULATOR                                           #
 #------------------------------------------------------------------------------------------------------#
 
-def isAssignRegister0():
-    return True
+def printMemory(memory: list):
+    print('memory:')
+    for i, addr in enumerate(memory):
+        print(f'\tmem[ {i} ] {addr[1]}')
+
+def printState(pc: int, memory: list, register: list):
+    print('@@@')
+    print('state:')
+    print(f'\tpc {pc}')
+    print('\tmemory:')
+    for i, addr in enumerate(memory):
+        print(f'\t\tmem[ {i} ] {addr[1]}')
+    print('\tregisters:')
+    for i, val in enumerate(register):
+        print(f'\t\treg[ {i} ] {val}')
+    print('end state\n',)
+
+def nand1bit(p: chr, q: chr) -> str:
+    return '0' if p == '1' and q == '1' else '1'
+
+def nand16bit(a: str, b: str) -> str:
+    return ''.join((nand1bit(p, q) for p, q in zip(a, b)))
+
+def nandInstructions(reg: list, dest: int, regA: int, regB: int) -> None:
+    if not isAssignRegister0(dest):
+        regA16 = f'{reg[regA]:016b}'
+        regB16 = f'{reg[regB]:016b}'
+        result = cvtTwosComplement(nand16bit(regA16, regB16))
+        reg[dest] = result
+
+def addInstructions(reg: list, dest: int, regA: int, regB: int) -> None:
+    if not isAssignRegister0(dest):
+        reg[dest] = reg[regA] + reg[regB]
+
+def lwInstructions(reg: list, stack: list, offsetField: int, regA: int, regB: int) -> None:
+    if offsetField:
+        # stack
+        pass
+    else:
+        pass
+
+def swInstructions(reg: list, stack: list, offsetField: int, regA: int, regB: int) -> None:
+    if offsetField:
+        # stack
+        pass
+    else:
+        pass
+
+def beqInstructions(reg: list, offsetField: int, regA: int, regB: int) -> int:
+    return offsetField if reg[regA] == reg[regB] else 1
+
+def jalrInstructions(reg: list, regA: int, regB: int) -> int:
+    # ยังไม่ได้เขียน
+    return
+
+def haltInstructions():
+    pass
+
+def isAssignRegister0(destReg: int):
+    return not destReg

@@ -11,20 +11,22 @@ if not complieFile:
 
 for f in complieFile:
     # initialize register
-    reg = [[0].copy() for i in range(8)]
+    reg = [i for i in range(Config.maxRegs)]
     stack = []
-    lines = []
+    memory = []
     with open(abspath(f), 'r') as file:
         while True:
             l = file.readline()
             if not l:
                 break
-            lines.append(sf.splitOpcode(l.strip('\n')))
-    sizeOfProgram = len(lines)
-    index = 0
+            memory.append(sf.splitOpcode(l.strip('\n')))
+    sizeOfProgram = len(memory)
+    pc = 0
+    sf.printMemory(memory)
+    # Simulator
     while True:
-        if index == sizeOfProgram:
+        if pc == sizeOfProgram:
             print('end of program')
             break
-        index += 1
+        pc += 1
     print('+===+===+==='*8, end='\n\n')

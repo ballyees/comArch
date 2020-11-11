@@ -61,13 +61,13 @@ def convert2TwoComplement(val: str, index: int, fill: bool=False) -> str:
         val = f'{val:032b}'.replace('-', '')
         return val
     else:
-        if -32768 <= val <= 32767:
+        if Config.maxNegativeValue <= val <= Config.maxPositiveValue:
             if isNegativeValue(val):
                 val = (val ^ Config.xor16Bit) + 1
             val = f'{val:016b}'.replace('-', '')
             return val
         else:
-            raise ValueError(f'Line {index}:Value must in range [-32768, 32767]')
+            raise ValueError(f'Line {index}:Value must in range [{Config.maxNegativeValue}, {Config.maxPositiveValue}]')
             
 
 def rTypeFormatter(fields: list) -> str:
@@ -77,9 +77,9 @@ def rTypeFormatter(fields: list) -> str:
     # Bits 15-3 ไม่ใช้ (ควรตั้งไว้ที่ 0)
     # Bits 2-0 destReg (rd)
     opcode = Config.opcodeRType[fields[1]]
-    regA = f'{int(fields[4]):03b}'
+    regA = f'{int(fields[2]):03b}'
     regB = f'{int(fields[3]):03b}'
-    destReg = f'{int(fields[2]):03b}'
+    destReg = f'{int(fields[4]):03b}'
     return f'{Config.MSB7}{opcode}{regA}{regB}{Config.rType15to3}{destReg}'
 
 def iTypeFormatter(fields: list, index: int) -> str:

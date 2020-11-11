@@ -47,8 +47,8 @@ for f in sFile:
                 dec = int(a, base=2)
                 print(f'(address {i}): {dec} (hex {dec:#08x})', len(a))
             add.append(dec)
-        # af.writeFile(f, address)
-        af.writeFileNoFill(f, address, lines)
+        af.writeFile(f, address)
+        # af.writeFileNoFill(f, address, lines)
         for c, a in zip(check, add):
             print(c, a, c == a)
     print('+===+===+==='*8, end='\n\n')

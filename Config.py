@@ -2,7 +2,11 @@ class Config:
     #-------------------------------------------------------------------------------------------------------#
     #                                                  ASSEMBLER                                            #
     #-------------------------------------------------------------------------------------------------------#
-    numericAddress = { chr(ord('0') + i): chr(ord('0') + i) for i in range(9) }
+    maxRegs = 8
+    maxOffsetField = 15
+    maxPositiveValue = (1<<maxOffsetField) - 1
+    maxNegativeValue = -(1<<maxOffsetField)
+    numericAddress = { chr(ord('0') + i): chr(ord('0') + i) for i in range(maxRegs) }
     opcodeIType = {
         'lw': '010',
         'sw': '011',
