@@ -30,7 +30,11 @@ def cvtSymbolicAddress2RegisterNumber(feilds: list, SA: dict, index: int) -> lis
         if Config.opcodes.get(feilds[1], None):
             if len(feilds) - 1 == i and Config.opcodeIType.get(feilds[1], None):
                 if SA.get(f, None):
-                    feilds[i] = f'{int(SA[f])-index}' if index > int(SA[f]) and int(SA[f]) >= 0 else SA[f]
+                    if int(SA[f]) <= 0:
+                        feilds[i] = SA[f]
+                    else:
+                        feilds[i] = f'{int(SA[f])-index}'
+                        # feilds[i] = f'{int(SA[f])-index}' if index > int(SA[f]) and int(SA[f]) >= 0 else SA[f]
                 else:
                     try:
                         feilds[i] = int(f)

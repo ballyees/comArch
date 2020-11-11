@@ -4,12 +4,14 @@ from os.path import abspath
 from os import listdir
 from Config import Config
 import AssemblerFunc as af
+from printArt import startAssembler, endAssembler
 
 sFile = [] if '-f' in argv[1:] else argv[1:]
 if not sFile:
     sFile = list(filter(lambda file: (".s" in file), listdir()))
 
 for f in sFile:
+    startAssembler()
     with open(abspath(f), 'r') as file:
         # init value
         symbolicAddress = {}
@@ -21,6 +23,7 @@ for f in sFile:
             # print(l)
             # breakpoint()
             fields = af.cvtSymbolicAddress2RegisterNumber(l.copy(), symbolicAddress, i)
+            print(fields)
             lines[i] = fields.copy()
             if fields[1] in Config.opcodeIType:
                 address[i] = af.iTypeFormatter(fields, i)
@@ -50,6 +53,7 @@ for f in sFile:
             add.append(dec)
         af.writeFile(f, address)
         # af.writeFileNoFill(f, address, lines)
-        for c, a in zip(check, add):
-            print(c, a, c == a)
-    print('+===+===+==='*8, end='\n\n')
+        # for c, a in zip(check, add):
+        #     print(c, a, c == a)
+    # print('+===+===+==='*8, end='\n\n')
+    endAssembler()

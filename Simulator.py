@@ -4,12 +4,14 @@ from os.path import abspath
 from os import listdir
 from Config import Config
 import SimulatorFunc as sf
+from printArt import startSimulalor, endSimulalor
 
 complieFile = [] if '-f' in argv[1:] else argv[1:]
 if not complieFile:
     complieFile = list(filter(lambda file: (".compile" in file), listdir()))
 
 for f in complieFile:
+    startSimulalor()
     # initialize register
     reg = [0 for i in range(Config.maxRegs)]
     stack = []
@@ -43,8 +45,10 @@ for f in complieFile:
             updatePC = sf.FuncIType[instruction](reg, stack, memory[pc][0][3], memory[pc][0][1], memory[pc][0][2])
             pc += updatePC
         elif instruction == 'halt':
-            sf.haltInstruction(ie, pc+1, memory, reg)
-            break
+            pc += 1
+            sf.haltInstruction(ie, pc, memory, reg)
         
         # breakpoint()
-    print('+===+===+==='*8, end='\n\n')
+
+    # print('+===+===+==='*8, end='\n\n')
+    endSimulalor()
