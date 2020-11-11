@@ -6,11 +6,12 @@ from Config import Config
 import SimulatorFunc as sf
 from printArt import startSimulalor, endSimulalor
 
-complieFile = [] if '-f' in argv[1:] else argv[1:]
-if not complieFile:
-    complieFile = list(filter(lambda file: (".compile" in file), listdir()))
+compileFile = [] if '-f' in argv[1:] else argv[1:]
+if not compileFile:
+    compileFile = list(filter(lambda file: (".compile" in file), listdir()))
 
-for f in complieFile:
+for f in compileFile:
+    print(f'run in file: {f}')
     startSimulalor()
     # initialize register
     reg = [0 for i in range(Config.maxRegs)]
@@ -25,14 +26,16 @@ for f in complieFile:
     sizeOfProgram = len(memory)
     pc = 0
     ie = 0
+    sf.printItemInMemory(memory)
     sf.printMemory(memory)
     # Simulator
     while True:
-        
-        if (pc == sizeOfProgram) or (memory[pc][0][0] == '.fill'):
+        # print(memory[pc])
+        instruction = memory[pc][0][0]
+        if (pc == sizeOfProgram) or (instruction == '.fill'):
             print('end of program')
             break
-        instruction = memory[pc][0][0]
+        
         if instruction == 'noop':
             pc += 1
             continue

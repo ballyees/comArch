@@ -11,18 +11,22 @@ if not sFile:
     sFile = list(filter(lambda file: (".s" in file), listdir()))
 
 for f in sFile:
+    print(f'complie in file {f}')
     startAssembler()
     with open(abspath(f), 'r') as file:
         # init value
         symbolicAddress = {}
-        lines = [af.addFillVal(symbolicAddress, fields, i) for i, fields in enumerate(file.readlines())]
+        symbolicAddressLabel = {}
+        lines = [af.addFillVal(symbolicAddress, symbolicAddressLabel, fields, i) for i, fields in enumerate(file.readlines())]
         address = list(range(len(lines)))
+        print(symbolicAddress, symbolicAddressLabel)
         # fields = list(range(len(lines)))
         # convert to binary
         for i, l in enumerate(lines):
             # print(l)
             # breakpoint()
-            fields = af.cvtSymbolicAddress2RegisterNumber(l.copy(), symbolicAddress, i)
+            # print(l)
+            fields = af.cvtSymbolicAddress2RegisterNumber(l.copy(), symbolicAddress, symbolicAddressLabel, i)
             print(fields)
             lines[i] = fields.copy()
             if fields[1] in Config.opcodeIType:

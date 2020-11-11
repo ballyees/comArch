@@ -82,6 +82,10 @@ def printMemory(memory: list):
     print('memory:')
     for i, addr in enumerate(memory):
         print(f'\tmem[ {i} ] {addr[1]}')
+def printItemInMemory(memory: list):
+    print('memory:')
+    for i, addr in enumerate(memory):
+        print(f'\tmem[ {i} ] {addr[0]}')
 
 def printState(pc: int, memory: list, register: list):
     print('@@@')

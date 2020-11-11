@@ -17,24 +17,28 @@ def writeFileNoFill(fileDotS: str, address: list, lines: list) -> None:
             if '.fill' not in line:
                 file.write(addr + '\n')
 
-def addFillVal(SA: dict, fields: list, index: int) -> list:
+def addFillVal(SA: dict, SAL: dict, fields: list, index: int) -> list:
     fields = fields.strip('\n').split(' ')
     if len(fields) == 3 and fields[1] == '.fill':
-        SA[fields[0]] = SA.get(fields[2], fields[2])
+        if SAL.get(fields[2], None):
+            SA[fields[0]] = SAL[fields[2]]
+        else:
+            SA[fields[0]] = SA.get(fields[2], fields[2])
     elif fields[0]:
-        SA[fields[0]] = index
+        SAL[fields[0]] = index
     return fields
 
-def cvtSymbolicAddress2RegisterNumber(feilds: list, SA: dict, index: int) -> list:
+def cvtSymbolicAddress2RegisterNumber(feilds: list, SA: dict, SAL: dict, index: int) -> list:
     for i, f in enumerate(feilds[2:], start=2):
         if Config.opcodes.get(feilds[1], None):
             if len(feilds) - 1 == i and Config.opcodeIType.get(feilds[1], None):
                 if SA.get(f, None):
-                    if int(SA[f]) <= 0:
-                        feilds[i] = SA[f]
+                    feilds[i] = SA[f]
+                elif SAL.get(f, None):
+                    if int(SAL[f]) <= 0:
+                        feilds[i] = SAL[f]
                     else:
-                        feilds[i] = f'{int(SA[f])-index}'
-                        # feilds[i] = f'{int(SA[f])-index}' if index > int(SA[f]) and int(SA[f]) >= 0 else SA[f]
+                        feilds[i] = f'{int(SAL[f])-index}'
                 else:
                     try:
                         feilds[i] = int(f)
@@ -47,6 +51,8 @@ def cvtSymbolicAddress2RegisterNumber(feilds: list, SA: dict, index: int) -> lis
         elif feilds[1] == '.fill':
             if SA.get(f, None):
                 feilds[i] = SA[f]
+            elif SAL.get(f, None):
+                feilds[i] = SAL[f]
             else:
                 try:
                     int(feilds[i])
