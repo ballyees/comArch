@@ -22,12 +22,29 @@ for f in complieFile:
             memory.append(sf.splitOpcode(l.strip('\n')))
     sizeOfProgram = len(memory)
     pc = 0
+    ie = 0
     sf.printMemory(memory)
     # Simulator
     while True:
-        sf.printState(pc, memory, reg)
+        
         if (pc == sizeOfProgram) or (memory[pc][0][0] == '.fill'):
             print('end of program')
             break
-        pc += 1
+        instruction = memory[pc][0][0]
+        if instruction == 'noop':
+            pc += 1
+            continue
+        ie += 1
+        sf.printState(pc, memory, reg)
+        if instruction in sf.FuncRType:
+            sf.FuncRType[instruction](reg, memory[pc][0][3], memory[pc][0][1], memory[pc][0][2])
+            pc += 1
+        elif instruction in sf.FuncIType:
+            updatePC = sf.FuncIType[instruction](reg, stack, memory[pc][0][3], memory[pc][0][1], memory[pc][0][2])
+            pc += updatePC
+        elif instruction == 'halt':
+            sf.haltInstruction(ie, pc+1, memory, reg)
+            break
+        
+        # breakpoint()
     print('+===+===+==='*8, end='\n\n')

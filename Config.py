@@ -40,4 +40,3 @@ class Config:
     opcodesBin = dict([(b, i) for i, b in opcodes.items()])
 
     
-# print(Config.opcodes)

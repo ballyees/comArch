@@ -18,8 +18,9 @@ for f in sFile:
         # fields = list(range(len(lines)))
         # convert to binary
         for i, l in enumerate(lines):
+            # print(l)
+            # breakpoint()
             fields = af.cvtSymbolicAddress2RegisterNumber(l.copy(), symbolicAddress, i)
-            # print(f)
             lines[i] = fields.copy()
             if fields[1] in Config.opcodeIType:
                 address[i] = af.iTypeFormatter(fields, i)

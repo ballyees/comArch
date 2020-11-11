@@ -30,7 +30,7 @@ def cvtSymbolicAddress2RegisterNumber(feilds: list, SA: dict, index: int) -> lis
         if Config.opcodes.get(feilds[1], None):
             if len(feilds) - 1 == i and Config.opcodeIType.get(feilds[1], None):
                 if SA.get(f, None):
-                    feilds[i] = f'{int(SA[f])-index}' if index > int(SA[f]) else SA[f]
+                    feilds[i] = f'{int(SA[f])-index}' if index > int(SA[f]) and int(SA[f]) >= 0 else SA[f]
                 else:
                     try:
                         feilds[i] = int(f)
@@ -65,6 +65,7 @@ def convert2TwoComplement(val: str, index: int, fill: bool=False) -> str:
             if isNegativeValue(val):
                 val = (val ^ Config.xor16Bit) + 1
             val = f'{val:016b}'.replace('-', '')
+            
             return val
         else:
             raise ValueError(f'Line {index}:Value must in range [{Config.maxNegativeValue}, {Config.maxPositiveValue}]')
