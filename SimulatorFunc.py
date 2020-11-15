@@ -125,27 +125,42 @@ def addInstruction(reg: list, dest: int, regA: int, regB: int) -> None:
         reg[dest] = reg[regA] + reg[regB]
 
 def lwInstruction(reg: list, memory: list, stack: list, offsetField: int, regA: int, regB: int) -> int:
-    if offsetField:
+    if not regA == 7: #define register 7 = stack pointer
         # reg[regB] = reg[regA] + offsetField
         # print(reg[regA])
         # print(memory[reg[regA] + offsetField])
         reg[regB] = memory[reg[regA] + offsetField][1]
     else:
         # stack
-        if len(stack) > 0:
-            stack = stack.pop()
-            reg[regA] = len(stack) #fixed register / regA = 7 and can do it by using addInstruction (Teacher do that)
-        # stack[i] = reg[regA]
-        # stack[i+1] = reg[regB]  
-        # reg[regB] = reg[regA] + stack.pop()
+        if reg[regA]+offsetField == offsetField:
+            if memory[reg[regA]+offsetField][0][1] == 'stack':
+                reg[regB] = memory[reg[regA]+offsetField][1]
+                mem = memory[reg[regA]+offsetField]
+                memory.remove(mem)
+                memory.append[(mem[0],0)]
+        else:
+            reg[regB] = memory[reg[regA]+offsetField][1]
+            memory.pop()
+            # stack = stack.pop()
     return 1
 
 def swInstruction(reg: list, memory: list, stack: list, offsetField: int, regA: int, regB: int) -> int:
-    if offsetField:
-        pass
+    if not regA == 7:
+        mem = memory[reg[regA] + offsetField]
+        memory.remove(mem)
+        memory.insert(reg[regA] + offsetField,(mem[0],reg[regB]))
     else:
-        stack = stack.append(reg[regB])
-        reg[regA] = len(stack) #can do it by using addInstaruction (Teacher do that) 
+        # stack = stack.append(reg[regB])
+        if reg[regA]+offsetField == offsetField:
+            if memory[reg[regA]+offsetField][0][1] == 'stack':
+                memory.append((stack,offsetField,reg[regA]),reg[regB])
+            else:
+                mem = memory[reg[regA]+offsetField]
+                memory.remove(mem)
+                memory.append[(stack,offsetField,reg[regA]),reg[regB]]
+        else:
+            memory.append((stack,offsetField,reg[regA]),reg[regB])
+        
     return 1
 
 def beqInstruction(reg: list, memory: list, stack: list, offsetField: int, regA: int, regB: int) -> int:
