@@ -23,7 +23,8 @@ def addFillVal(SA: dict, SAL: dict, fields: list, index: int) -> list:
         if SAL.get(fields[2], None):
             SA[fields[0]] = SAL[fields[2]]
         else:
-            SA[fields[0]] = SA.get(fields[2], fields[2])
+            SA[fields[0]] = index
+            # SA[fields[0]] = SA.get(fields[2], fields[2])
     elif fields[0]:
         SAL[fields[0]] = index
     return fields
@@ -38,7 +39,7 @@ def cvtSymbolicAddress2RegisterNumber(feilds: list, SA: dict, SAL: dict, index: 
                     if int(SAL[f]) <= 0:
                         feilds[i] = SAL[f]
                     else:
-                        feilds[i] = f'{int(SAL[f])-index}'
+                        feilds[i] = f'{int(SAL[f])-index-1}'
                 else:
                     try:
                         feilds[i] = int(f)
