@@ -26,7 +26,7 @@ for f in compileFile:
     sizeOfProgram = len(memory)
     pc = 0
     ie = 0
-    sf.printItemInMemory(memory)
+    # sf.printItemInMemory(memory)
     sf.printMemory(memory)
     # breakpoint()
     # Simulator
