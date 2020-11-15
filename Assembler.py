@@ -19,7 +19,7 @@ for f in sFile:
         symbolicAddressLabel = {}
         lines = [af.addFillVal(symbolicAddress, symbolicAddressLabel, fields, i) for i, fields in enumerate(file.readlines())]
         address = list(range(len(lines)))
-        print(symbolicAddress, symbolicAddressLabel)
+        # print(symbolicAddress, symbolicAddressLabel)
         # fields = list(range(len(lines)))
         # convert to binary
         for i, l in enumerate(lines):
@@ -27,7 +27,7 @@ for f in sFile:
             # breakpoint()
             # print(l)
             fields = af.cvtSymbolicAddress2RegisterNumber(l.copy(), symbolicAddress, symbolicAddressLabel, i)
-            print(fields)
+            # print(fields)
             lines[i] = fields.copy()
             if fields[1] in Config.opcodeIType:
                 address[i] = af.iTypeFormatter(fields, i)
@@ -48,12 +48,13 @@ for f in sFile:
         for i, a in enumerate(address):
             # print(len(a))
             if lines[i][1] == '.fill':
-                dec = int(lines[i][2])
+                dec = af.twoComplement2Integer(a)
                 addr = int(a, base=2)
                 print(f'(address {i}): {dec} (hex {addr:#x})')
             else:
                 dec = int(a, base=2)
-                print(f'(address {i}): {dec} (hex {dec:#08x})', len(a))
+                print(f'(address {i}): {dec} (hex {dec:#08x})')
+                # print(f'(address {i}): {dec} (hex {dec:#08x})', len(a))
             add.append(dec)
         af.writeFile(f, address)
         # af.writeFileNoFill(f, address, lines)

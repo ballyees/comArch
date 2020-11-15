@@ -63,6 +63,13 @@ def cvtSymbolicAddress2RegisterNumber(feilds: list, SA: dict, SAL: dict, index: 
 def isNegativeValue(value: int) -> bool:
     return value < 0
 
+def twoComplement2Integer(value: str) -> int:
+    if value[0] == "1":
+        val = -((int(value, base=2) ^ (Config.xor32Bit if len(value) == 32 else Config.xor16Bit)) + 1)
+    else: 
+        val = int(value[1:], base=2)
+    return val
+
 def convert2TwoComplement(val: str, index: int, fill: bool=False) -> str:
     val = int(val)
     if fill:
