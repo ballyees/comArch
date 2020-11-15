@@ -47,9 +47,13 @@ for f in compileFile:
         elif instruction in sf.FuncIType:
             updatePC = sf.FuncIType[instruction](reg, stack, memory[pc][0][3], memory[pc][0][1], memory[pc][0][2])
             pc += updatePC
+        elif instruction in sf.FuncJType:
+            updatePC = sf.FuncJType[instruction](reg, memory[pc][0][1], memory[pc][0][2], pc)
+            pc += updatePC
         elif instruction == 'halt':
             pc += 1
             sf.haltInstruction(ie, pc, memory, reg)
+            break
         
         # breakpoint()
 

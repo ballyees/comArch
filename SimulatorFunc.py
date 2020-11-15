@@ -121,22 +121,32 @@ def lwInstruction(reg: list, stack: list, offsetField: int, regA: int, regB: int
         reg[regB] = reg[regA] + offsetField
     else:
         # stack
-        reg[regB] = reg[regA] + stack.pop()
+        if len(stack) > 0:
+            stack = stack.pop()
+            reg[regA] = len(stack) #fixed register / regA = 7 and can do it by using addInstruction (Teacher do that)
+        # stack[i] = reg[regA]
+        # stack[i+1] = reg[regB]  
+        # reg[regB] = reg[regA] + stack.pop()
     return 1
 
 def swInstruction(reg: list, stack: list, offsetField: int, regA: int, regB: int) -> int:
     if offsetField:
-        pass
+        #
     else:
-        # stack
-        pass
+        stack = stack.append(reg[regB])
+        reg[regA] = len(stack) #can do it by using addInstaruction (Teacher do that) 
     return 1
+
 def beqInstruction(reg: list, stack: list, offsetField: int, regA: int, regB: int) -> int:
     return offsetField if reg[regA] == reg[regB] else 1
 
-def jalrInstruction(reg: list, regA: int, regB: int) -> int:
-    # ยังไม่ได้เขียน
-    return
+def jalrInstruction(reg: list, regA: int, regB: int, pc: int) -> int:
+    if (reg[regA] == reg[regB]):
+        reg[regB] = pc + 1
+        return pc - reg[regA]
+    else:
+        reg[regB] = pc + 1
+        return reg[regA] - pc
 
 def haltInstruction(instructionsExecuted: int, pc: int, memory: list, register: list) -> None:
     print('machine halted')
@@ -159,4 +169,7 @@ FuncIType = {
     'lw': lwInstruction,
     'sw': swInstruction,
     'beq': beqInstruction
+}
+FuncJType = {
+    'jalr': jalrInstruction
 }
