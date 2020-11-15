@@ -127,8 +127,8 @@ def addInstruction(reg: list, dest: int, regA: int, regB: int) -> None:
 def lwInstruction(reg: list, memory: list, stack: list, offsetField: int, regA: int, regB: int) -> int:
     if offsetField:
         # reg[regB] = reg[regA] + offsetField
-        print(reg[regA])
-        print(memory[reg[regA] + offsetField])
+        # print(reg[regA])
+        # print(memory[reg[regA] + offsetField])
         reg[regB] = memory[reg[regA] + offsetField][1]
     else:
         # stack
