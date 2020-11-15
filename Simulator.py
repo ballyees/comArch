@@ -28,6 +28,7 @@ for f in compileFile:
     ie = 0
     sf.printItemInMemory(memory)
     sf.printMemory(memory)
+    # breakpoint()
     # Simulator
     while True:
         # print(memory[pc])
@@ -45,7 +46,7 @@ for f in compileFile:
             sf.FuncRType[instruction](reg, memory[pc][0][3], memory[pc][0][1], memory[pc][0][2])
             pc += 1
         elif instruction in sf.FuncIType:
-            updatePC = sf.FuncIType[instruction](reg, stack, memory[pc][0][3], memory[pc][0][1], memory[pc][0][2])
+            updatePC = sf.FuncIType[instruction](reg, memory, stack, memory[pc][0][3], memory[pc][0][1], memory[pc][0][2])
             pc += updatePC
         elif instruction in sf.FuncJType:
             updatePC = sf.FuncJType[instruction](reg, memory[pc][0][1], memory[pc][0][2], pc)

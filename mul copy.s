@@ -9,7 +9,7 @@
  add 3 4 3
 mul add 1 2 1
  add 6 4 6
- beq 6 3 2
+ beq 6 3 1
  beq 0 0 mul
  beq 0 5 done
  nand 1 1 1
@@ -17,7 +17,7 @@ mul add 1 2 1
 done noop
  halt
 addrM .fill mul
-mcand .fill 5
-mpiler .fill -5
+mcand .fill -5
+mpiler .fill 5
 and .fill -32768
 pos .fill 1

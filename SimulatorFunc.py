@@ -105,10 +105,18 @@ def nand1bit(p: chr, q: chr) -> str:
 def nand16bit(a: str, b: str) -> str:
     return ''.join((nand1bit(p, q) for p, q in zip(a, b)))
 
+def twosComplement16Bit(val: int):
+        if val < 0:
+            val = (val ^ Config.xor16Bit) + 1
+        val = f'{val:016b}'.replace('-', '')
+        return val
+
 def nandInstruction(reg: list, dest: int, regA: int, regB: int) -> None:
     if not isAssignRegister0(dest):
-        regA16 = f'{reg[regA]:016b}'
-        regB16 = f'{reg[regB]:016b}'
+        # regA16 = f'{reg[regA]:016b}'
+        # regB16 = f'{reg[regB]:016b}'
+        regA16 = twosComplement16Bit(reg[regA])
+        regB16 = twosComplement16Bit(reg[regB])
         result = cvtTwosComplement(nand16bit(regA16, regB16))
         reg[dest] = result
 
@@ -116,9 +124,12 @@ def addInstruction(reg: list, dest: int, regA: int, regB: int) -> None:
     if not isAssignRegister0(dest):
         reg[dest] = reg[regA] + reg[regB]
 
-def lwInstruction(reg: list, stack: list, offsetField: int, regA: int, regB: int) -> int:
+def lwInstruction(reg: list, memory: list, stack: list, offsetField: int, regA: int, regB: int) -> int:
     if offsetField:
-        reg[regB] = reg[regA] + offsetField
+        # reg[regB] = reg[regA] + offsetField
+        print(reg[regA])
+        print(memory[reg[regA] + offsetField])
+        reg[regB] = memory[reg[regA] + offsetField][1]
     else:
         # stack
         if len(stack) > 0:
@@ -129,16 +140,16 @@ def lwInstruction(reg: list, stack: list, offsetField: int, regA: int, regB: int
         # reg[regB] = reg[regA] + stack.pop()
     return 1
 
-def swInstruction(reg: list, stack: list, offsetField: int, regA: int, regB: int) -> int:
+def swInstruction(reg: list, memory: list, stack: list, offsetField: int, regA: int, regB: int) -> int:
     if offsetField:
-        #
+        pass
     else:
         stack = stack.append(reg[regB])
         reg[regA] = len(stack) #can do it by using addInstaruction (Teacher do that) 
     return 1
 
-def beqInstruction(reg: list, stack: list, offsetField: int, regA: int, regB: int) -> int:
-    return offsetField if reg[regA] == reg[regB] else 1
+def beqInstruction(reg: list, memory: list, stack: list, offsetField: int, regA: int, regB: int) -> int:
+    return offsetField+1 if reg[regA] == reg[regB] else 1
 
 def jalrInstruction(reg: list, regA: int, regB: int, pc: int) -> int:
     if (reg[regA] == reg[regB]):
