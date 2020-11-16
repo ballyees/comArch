@@ -18,7 +18,8 @@ def writeFileNoFill(fileDotS: str, address: list, lines: list) -> None:
                 file.write(addr + '\n')
 
 def addFillVal(SA: dict, SAL: dict, fields: list, index: int) -> list:
-    fields = fields.strip('\n').split(' ')
+    fields = fields.strip('\n').split(Config.comment)[0].split(' ')
+    print(fields)
     if len(fields) == 3 and fields[1] == '.fill':
         if SAL.get(fields[2], None):
             SA[fields[0]] = SAL[fields[2]]

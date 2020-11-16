@@ -7,6 +7,7 @@ class Config:
     maxPositiveValue = (1<<maxOffsetField) - 1
     maxNegativeValue = -(1<<maxOffsetField)
     numericAddress = { chr(ord('0') + i): chr(ord('0') + i) for i in range(maxRegs) }
+    comment = " //"
     opcodeIType = {
         'lw': '010',
         'sw': '011',
