@@ -35,9 +35,6 @@ for f in sFile:
                 address[i] = af.fillInstructionFormatter(fields, i)
             else:
                 raise AttributeError(f'{fields[1]} not instruction')
-        check = ['8454151', '9043971', '655361', '16842754', '16842749', '29360128', '25165824', '5', '-1', '2']
-        check = [int(c) for c in check]
-        add = []
         for i, a in enumerate(address):
             if lines[i][1] == '.fill':
                 dec = af.twoComplement2Integer(a)
@@ -46,6 +43,5 @@ for f in sFile:
             else:
                 dec = int(a, base=2)
                 print(f'(address {i}): {dec} (hex {dec:#08x})')
-            add.append(dec)
         af.writeFile(f, address)
     endAssembler()
