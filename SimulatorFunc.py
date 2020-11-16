@@ -52,7 +52,7 @@ def oTypeFormatter(splitAddress: list, addr: list) -> None:
     # opcode
     addr.append(Config.opcodeOTypeBin[splitAddress[1]])
 
-def splitOpcode(address: str) -> list:
+def splitOpcode(address: str) -> list: # แปลง opcode เป็น instruction
     addr = []
     splitAddr = [address[:7], address[7:10], address[10:]]
     if isFillFormat(splitAddr, address):
@@ -113,8 +113,6 @@ def twosComplement16Bit(val: int):
 
 def nandInstruction(reg: list, dest: int, regA: int, regB: int) -> None:
     if not isAssignRegister0(dest):
-        # regA16 = f'{reg[regA]:016b}'
-        # regB16 = f'{reg[regB]:016b}'
         regA16 = twosComplement16Bit(reg[regA])
         regB16 = twosComplement16Bit(reg[regB])
         result = cvtTwosComplement(nand16bit(regA16, regB16))
@@ -126,9 +124,6 @@ def addInstruction(reg: list, dest: int, regA: int, regB: int) -> None:
 
 def lwInstruction(reg: list, memory: list, stack: list, offsetField: int, regA: int, regB: int) -> int:
     if not regA == 7: #define register 7 = stack pointer
-        # reg[regB] = reg[regA] + offsetField
-        # print(reg[regA])
-        # print(memory[reg[regA] + offsetField])
         reg[regB] = memory[reg[regA] + offsetField][1]
     else:
         # stack
@@ -186,7 +181,7 @@ def isAssignRegister0(destReg: int):
 #------------------------------------------------------------------------------------------------------#
 #                                                  SIMULATOR                                           #
 #------------------------------------------------------------------------------------------------------#
-
+# เก็บค่าฟังก์ชันไว้ใน dictionary (JSON OBJECT) เพื่อให้ง่ายต่อการเรียกใช้
 FuncRType = {
     "add": addInstruction,
     'nand': nandInstruction

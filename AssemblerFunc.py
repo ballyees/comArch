@@ -1,39 +1,37 @@
 from Config import Config
 
-def writeLine(filename: str, line: str) -> list:
+def writeLine(filename: str, line: str) -> None: # เขียนไฟล์ทีละบรรทัด
     with open(filename, 'a+') as file:
         file.write(line+'\n')
 
-def writeFile(fileDotS: str, address: list) -> None:
+def writeFile(fileDotS: str, address: list) -> None: # เขียนไฟล์
     filename = f'{fileDotS.split(".")[0]}.compile'
     with open(filename, 'w') as file:
         for addr in address:
             file.write(addr + '\n')
 
-def writeFileNoFill(fileDotS: str, address: list, lines: list) -> None:
+def writeFileNoFill(fileDotS: str, address: list, lines: list) -> None: # เขียนไฟล์ที่ไม่มี .fill
     filename = f'{fileDotS.split(".")[0]}.compile'
     with open(filename, 'w') as file:
         for addr, line in zip(address, lines):
             if '.fill' not in line:
                 file.write(addr + '\n')
 
-def addFillVal(SA: dict, SAL: dict, fields: list, index: int) -> list:
+def addFillVal(SA: dict, SAL: dict, fields: list, index: int) -> list: # เพิ่มค่า symbolicAddress และ บรรทัดค่าที่มี label อยู่
     fields = fields.strip('\n').split(Config.comment)[0].split(' ')
-    print(fields)
     if len(fields) == 3 and fields[1] == '.fill':
         if SAL.get(fields[2], None):
             SA[fields[0]] = SAL[fields[2]]
         else:
             SA[fields[0]] = index
-            # SA[fields[0]] = SA.get(fields[2], fields[2])
     elif fields[0]:
         SAL[fields[0]] = index
     return fields
 
-def cvtSymbolicAddress2RegisterNumber(feilds: list, SA: dict, SAL: dict, index: int) -> list:
+def cvtSymbolicAddress2RegisterNumber(feilds: list, SA: dict, SAL: dict, index: int) -> list: # แปลงค่าให้เป็นค่า ของ register หรือ offsetField
     for i, f in enumerate(feilds[2:], start=2):
         if Config.opcodes.get(feilds[1], None):
-            if len(feilds) - 1 == i and Config.opcodeIType.get(feilds[1], None):
+            if len(feilds) - 1 == i and Config.opcodeIType.get(feilds[1], None): # offsetField, label
                 if SA.get(f, None):
                     feilds[i] = SA[f]
                 elif SAL.get(f, None):
@@ -88,7 +86,6 @@ def convert2TwoComplement(val: str, index: int, fill: bool=False) -> str:
             return val
         else:
             raise ValueError(f'Line {index}:Value must in range [{Config.maxNegativeValue}, {Config.maxPositiveValue}]')
-            
 
 def rTypeFormatter(fields: list) -> str:
     # Bits 24-22 opcode

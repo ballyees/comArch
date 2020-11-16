@@ -26,17 +26,13 @@ for f in compileFile:
     sizeOfProgram = len(memory)
     pc = 0
     ie = 0
-    # sf.printItemInMemory(memory)
     sf.printMemory(memory)
-    # breakpoint()
     # Simulator
     while True:
-        # print(memory[pc])
         instruction = memory[pc][0][0]
         if (pc == sizeOfProgram) or (instruction == '.fill'):
             print('end of program')
             break
-        
         if instruction == 'noop':
             pc += 1
             continue
@@ -55,8 +51,4 @@ for f in compileFile:
             pc += 1
             sf.haltInstruction(ie, pc, memory, reg)
             break
-        
-        # breakpoint()
-
-    # print('+===+===+==='*8, end='\n\n')
     endSimulalor()
